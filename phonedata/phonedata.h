@@ -79,7 +79,7 @@ private:
 
 private:
 	std::vector<char> buffer;
-	DataHead head;
+	DataHead *head;
 	size_t recordCount;
 };
 

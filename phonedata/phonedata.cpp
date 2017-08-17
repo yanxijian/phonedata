@@ -60,18 +60,18 @@ PhoneData::PhoneData()
 		return;
 	}
 	buffer = std::vector<char>(std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>());
-	head = *reinterpret_cast<DataHead *>(buffer.data());
-	recordCount = (buffer.size() - head.offset) / PHONE_INDEX_LENGTH;
+	head = reinterpret_cast<DataHead *>(buffer.data());
+	recordCount = (buffer.size() - head->offset) / PHONE_INDEX_LENGTH;
 }
 
 PhoneInfo PhoneData::lookUp(int64_t phone) const
 {
 	assert(phone >= 1000000 && phone <= 99999999999);
+
 	while (phone > 9999999)
 	{
 		phone /= 10;
 	}
-
 	return _lookUp(static_cast<uint32_t>(phone));
 }
 
@@ -92,30 +92,30 @@ PhoneInfo PhoneData::_lookUp(uint32_t phone7) const
 	while (left <= right)
 	{
 		size_t middle = (left + right) / 2;
-		size_t currentOffset = head.offset + middle * PHONE_INDEX_LENGTH;
+		size_t currentOffset = head->offset + middle * PHONE_INDEX_LENGTH;
 		if (currentOffset >= buffer.size())
 		{
 			return PhoneInfo();
 		}
 
 		auto _buffer = std::vector<char>(buffer.cbegin() + currentOffset, buffer.cbegin() + currentOffset + PHONE_INDEX_LENGTH);
-		Record _record = *reinterpret_cast<Record *>(_buffer.data());
+		Record *_record = reinterpret_cast<Record *>(_buffer.data());
 
-		if (_record.phone > phone7)
+		if (_record->phone > phone7)
 		{
 			right = middle - 1;
 		}
-		else if (_record.phone < phone7)
+		else if (_record->phone < phone7)
 		{
 			left = middle + 1;
 		}
 		else
 		{
-			std::string recordContent = getRecordContent(buffer, _record.offset);
+			std::string recordContent = getRecordContent(buffer, _record->offset);
 			std::vector <std::string> contents = ssplit(recordContent, std::string("|"));
 			PhoneInfo info;
-			info.type = static_cast<CARDTYPE>(_record.type);
-			info.phone = _record.phone;
+			info.type = static_cast<CARDTYPE>(_record->type);
+			info.phone = _record->phone;
 			info.province = contents[PROVINCE];
 			info.city = contents[CITY];
 			info.zipCode = contents[ZIPCODE];
