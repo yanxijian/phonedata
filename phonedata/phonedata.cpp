@@ -114,12 +114,12 @@ PhoneInfo PhoneData::_lookUp(uint32_t phone7) const
 			std::string recordContent = getRecordContent(buffer, _record->offset);
 			std::vector <std::string> contents = ssplit(recordContent, std::string("|"));
 			PhoneInfo info;
-			info.type = static_cast<CARDTYPE>(_record->type);
-			info.phone = _record->phone;
-			info.province = contents[PROVINCE];
-			info.city = contents[CITY];
-			info.zipCode = contents[ZIPCODE];
-			info.areaCode = contents[AREACODE];
+			info.type		= static_cast<CARDTYPE>(_record->type);
+			info.phone		= _record->phone;
+			info.province	= contents[PROVINCE];
+			info.city		= contents[CITY];
+			info.zipCode	= contents[ZIPCODE];
+			info.areaCode	= contents[AREACODE];
 
 			return info;
 		}

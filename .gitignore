@@ -2,3 +2,10 @@
 phonedata.VC.VC.opendb
 *.db
 *.log
+*.obj
+*.tlog
+*.pdb
+*.ilk
+*.exe
+*.idb
+*.suo
