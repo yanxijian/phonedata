@@ -92,7 +92,7 @@ PhoneInfo PhoneData::lookUp(const std::string &phone) const
 
 PhoneInfo PhoneData::_lookUp(uint32_t phone7) const
 {
-	if (phone7 >= 1000000 && phone7 <= 99999999999)
+	if (head && phone7 >= 1000000 && phone7 <= 99999999999)
 	{
 		size_t left = 0;
 		size_t right = recordCount;
