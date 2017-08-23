@@ -57,8 +57,10 @@ PhoneData::PhoneData()
 	std::ifstream stream(path, std::ios::binary);
 	if (!stream.is_open())
 	{
+		head = nullptr;
 		return;
 	}
+
 	buffer = std::vector<char>(std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>());
 	head = reinterpret_cast<DataHead *>(buffer.data());
 	recordCount = (buffer.size() - head->offset) / PHONE_INDEX_LENGTH;
@@ -66,62 +68,69 @@ PhoneData::PhoneData()
 
 PhoneInfo PhoneData::lookUp(int64_t phone) const
 {
-	assert(phone >= 1000000 && phone <= 99999999999);
-
-	while (phone > 9999999)
+	if (phone >= 1000000 && phone <= 99999999999)
 	{
-		phone /= 10;
+		while (phone > 9999999)
+		{
+			phone /= 10;
+		}
+		return _lookUp(static_cast<uint32_t>(phone));
 	}
-	return _lookUp(static_cast<uint32_t>(phone));
+
+	return PhoneInfo();
 }
 
 PhoneInfo PhoneData::lookUp(const std::string &phone) const
 {
-	assert(phone.size() >= 7 && phone.size() <= 11);
+	if (phone.size() >= 7 && phone.size() <= 11)
+	{
+		return _lookUp(std::stoul(phone.substr(0, 7)));
+	}
 
-	return _lookUp(std::stoul(phone.substr(0, 7)));
+	return PhoneInfo();
 }
 
 PhoneInfo PhoneData::_lookUp(uint32_t phone7) const
 {
-	assert(phone7 >= 1000000 && phone7 <= 99999999999);
-
-	size_t left = 0;
-	size_t right = recordCount;
-
-	while (left <= right)
+	if (phone7 >= 1000000 && phone7 <= 99999999999)
 	{
-		size_t middle = (left + right) / 2;
-		size_t currentOffset = head->offset + middle * PHONE_INDEX_LENGTH;
-		if (currentOffset >= buffer.size())
-		{
-			return PhoneInfo();
-		}
+		size_t left = 0;
+		size_t right = recordCount;
 
-		auto _buffer = std::vector<char>(buffer.cbegin() + currentOffset, buffer.cbegin() + currentOffset + PHONE_INDEX_LENGTH);
-		Record *_record = reinterpret_cast<Record *>(_buffer.data());
+		while (left <= right)
+		{
+			size_t middle = (left + right) / 2;
+			size_t currentOffset = head->offset + middle * PHONE_INDEX_LENGTH;
+			if (currentOffset >= buffer.size())
+			{
+				return PhoneInfo();
+			}
 
-		if (_record->phone > phone7)
-		{
-			right = middle - 1;
-		}
-		else if (_record->phone < phone7)
-		{
-			left = middle + 1;
-		}
-		else
-		{
-			std::string recordContent = getRecordContent(buffer, _record->offset);
-			std::vector <std::string> contents = ssplit(recordContent, std::string("|"));
-			PhoneInfo info;
-			info.type		= static_cast<CARDTYPE>(_record->type);
-			info.phone		= _record->phone;
-			info.province	= contents[PROVINCE];
-			info.city		= contents[CITY];
-			info.zipCode	= contents[ZIPCODE];
-			info.areaCode	= contents[AREACODE];
+			auto _buffer = std::vector<char>(buffer.cbegin() + currentOffset, buffer.cbegin() + currentOffset + PHONE_INDEX_LENGTH);
+			Record *_record = reinterpret_cast<Record *>(_buffer.data());
 
-			return info;
+			if (_record->phone > phone7)
+			{
+				right = middle - 1;
+			}
+			else if (_record->phone < phone7)
+			{
+				left = middle + 1;
+			}
+			else
+			{
+				std::string recordContent = getRecordContent(buffer, _record->offset);
+				std::vector <std::string> contents = ssplit(recordContent, std::string("|"));
+				PhoneInfo info;
+				info.type		= static_cast<CARDTYPE>(_record->type);
+				info.phone		= _record->phone;
+				info.province	= contents[PROVINCE];
+				info.city		= contents[CITY];
+				info.zipCode	= contents[ZIPCODE];
+				info.areaCode	= contents[AREACODE];
+
+				return info;
+			}
 		}
 	}
 
