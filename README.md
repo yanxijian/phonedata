@@ -9,7 +9,7 @@
 
 #### 其他语言支持
 
-下载[phone.dat](https://github.com/yanxijian/phonedata/raw/master/phonedata/phone.dat)文件，用其他语言解析即可。
+下载 [phone.dat](https://github.com/yanxijian/phonedata/raw/master/phonedata/phone.dat) 文件，用其他语言解析即可。
 
 
 #### phone.dat文件格式
