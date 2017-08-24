@@ -26,7 +26,7 @@ static std::vector<std::string> ssplit(const std::string &str, const std::string
 	return vec;
 }
 
-static std::string getPhoneType(CARDTYPE type)
+std::string getPhoneType(CARDTYPE type)
 {
 	assert(type > UNKNOWN && type <= CMCC_V);
 

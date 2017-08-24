@@ -40,6 +40,8 @@ enum RECORD
 	AREACODE		// 长途区号
 };
 
+std::string getPhoneType(CARDTYPE type);
+
 struct PhoneInfo
 {
 	PhoneInfo() 
