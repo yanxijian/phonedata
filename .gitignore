@@ -1,7 +1,7 @@
+# Visual Studio
 *.log
 phonedata.VC.VC.opendb
 *.db
-*.log
 *.obj
 *.tlog
 *.pdb
@@ -9,3 +9,21 @@ phonedata.VC.VC.opendb
 *.exe
 *.idb
 *.suo
+.vs/
+Debug/
+Release/
+x64/
+Win32/
+
+# CMake
+build/
+build-*/
+out/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CMakeUserPresets.json
+compile_commands.json
+
+# 测试运行时生成的临时数据文件
+phonedata_test_*.dat

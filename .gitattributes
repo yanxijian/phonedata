@@ -1,0 +1,17 @@
+# phone.dat 是二进制数据：绝不能被换行符转换或 diff 工具改写。
+*.dat binary -diff
+
+# Git 会误判无扩展名的文本文件，这里显式声明。
+*.md      text eol=lf
+*.py      text eol=lf
+*.yml     text eol=lf
+*.c       text eol=lf
+*.cpp     text eol=lf
+*.h       text eol=lf
+CMakeLists.txt text eol=lf
+
+# 旧版 MSVC 工程文件保持 CRLF。
+*.sln            text eol=crlf
+*.vcxproj        text eol=crlf
+*.vcxproj.filters text eol=crlf
+*.vcxproj.user   text eol=crlf
