@@ -1,3 +1,6 @@
+# 默认按文本处理（换行统一），下面的规则再逐类覆盖
+* text=auto
+
 # phone.dat 是二进制数据：绝不能被换行符转换或 diff 工具改写。
 *.dat binary -diff
 
@@ -15,3 +18,4 @@ CMakeLists.txt text eol=lf
 *.vcxproj        text eol=crlf
 *.vcxproj.filters text eol=crlf
 *.vcxproj.user   text eol=crlf
+.gitattributes text eol=lf
